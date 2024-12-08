@@ -1,3 +1,6 @@
+
+
+//Benzema
 // Define the ghosts, Pac-Man, and grid
 float gridSize = 47.5; // Size of each grid cell
 int cols, rows;
