@@ -64,6 +64,8 @@ boolean isValidMove(int x, int y) {
   return true; // Valid move
 }
 
+
+
 void setup() {
   size(1000, 1000);
   frameRate(60);
@@ -71,16 +73,27 @@ void setup() {
   rows = grid.length;
 }
 
+// Variables to manage game state
+boolean gameWin = false; // Check if the player has won the game
+
 void draw() {
   
   if (!gameStarted) {
-    // Display the start screen
-    background(0); // Black background
-    fill(255, 255, 0); // Yellow text color
-    textSize(32); // Larger font size
-    textAlign(CENTER, CENTER);
-    text("Press 'M' to Start the Game", width / 2, height / 2); // Centered text
-    return; // Exit the draw loop until game starts
+    
+    drawStartupWindow();
+    return ;
+  }
+  else
+  {
+    if (!gameWin) {
+      // Check if all dots have been eaten
+      if (allDotsEaten()) {
+        gameWin = true; // Trigger the "YOU WIN" screen
+      }
+    } else {
+      // Show "YOU WIN" Screen
+      drawWinScreen();
+    }
   }
   
   background(0);
@@ -252,4 +265,79 @@ void keyPressed() {
     dirX = 1;
     dirY = 0;
   }
+}
+
+// Variables to manage game state and UI
+//boolean gameStarted = false; 
+int highScore = 0;
+// Function to draw the startup window
+void drawStartupWindow() {
+  background(0); // Black background
+  
+  // Title
+  textAlign(CENTER);
+  fill(255, 255, 0); // Yellow color
+  textSize(48);
+  text("PAC-MAN", width / 2, height / 3);
+  
+  // High score display
+  fill(255); // White color
+  textSize(24);
+  text("Highest Score: " + highScore, width / 2, height / 2);
+  
+  // Start button
+  drawStartButton(width / 2 - 50, height / 1.5, 100, 50);
+}
+
+// Function to draw a button with text
+void drawStartButton(float x, float y, float w, float h) {
+  fill(0, 128, 255); // Blue button color
+  rect(x, y, w, h, 10); // Rounded rectangle
+  fill(255); // White text
+  textSize(20);
+  textAlign(CENTER, CENTER);
+  text("START", x + w / 2, y + h / 2);
+}
+
+// Function to check for button click
+void mousePressed() {
+  if (!gameStarted) {
+    // Check if mouse is inside the start button
+    if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 &&
+        mouseY > height / 1.5 && mouseY < height / 1.5 + 50) {
+      gameStarted = true; // Start the game
+    }
+  }
+  //-----------------------------------------------------------
+  if (gameWin) {
+    // Check if the player clicked the Next Level button
+    if (mouseX > width / 2 - 60 && mouseX < width / 2 + 60 && 
+        mouseY > height / 2 && mouseY < height / 2 + 50) {
+      exit();
+    }
+  }
+}
+boolean allDotsEaten() {
+  for (int i = 0; i < grid.length; i++) {
+    for (int j = 0; j < grid[i].length; j++) {
+      if (grid[i][j] == 2) {
+        return false; // There's at least one dot left
+      }
+    }
+  }
+  return true; // All dots are eaten
+}
+void drawWinScreen() {
+  background(0); // Black background
+  textSize(48);
+  textAlign(CENTER, CENTER);
+  fill(255, 255, 0); // Yellow text
+  text("YOU WIN!", width / 2, height / 3);
+  
+  // Draw the Next Level button
+  fill(0, 0, 255); // Blue button
+  rect(width / 2 - 60, height / 2, 120, 50, 10); // Button with rounded corners
+  fill(255); // White text
+  textSize(20);
+  text("Next Level", width / 2, height / 2 + 30);
 }
