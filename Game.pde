@@ -1,5 +1,5 @@
 // Define the ghosts, Pac-Man, and grid
-float gridSize = 50; // Size of each grid cell
+float gridSize = 47.5; // Size of each grid cell
 int cols, rows;
 int pacmanX = 1, pacmanY = 1; // Pac-Man's position
 int dirX = 0, dirY = 0;       // Direction of movement
