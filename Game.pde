@@ -96,6 +96,7 @@ void draw() {
     } else {
       // Show "YOU WIN" Screen
       drawWinScreen();
+      return ;
     }
   }
   
