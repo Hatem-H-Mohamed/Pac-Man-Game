@@ -76,13 +76,11 @@ void setup() {
   rows = grid.length;
 }
 
-// Variables to manage game state
-boolean gameWin = false; // Check if the player has won the game
 
+boolean gameWin = false;
 void draw() {
   
-  if (!gameStarted) {
-    
+  if (!gameStarted) {   
     drawStartupWindow();
     return ;
   }
@@ -92,6 +90,8 @@ void draw() {
       // Check if all dots have been eaten
       if (allDotsEaten()) {
         gameWin = true; // Trigger the "YOU WIN" screen
+        nextLevel();
+        return;
       }
     } else {
       // Show "YOU WIN" Screen
@@ -317,7 +317,7 @@ void mousePressed() {
     // Check if the player clicked the Next Level button
     if (mouseX > width / 2 - 60 && mouseX < width / 2 + 60 && 
         mouseY > height / 2 && mouseY < height / 2 + 50) {
-      exit();
+          gameWin =false;
     }
   }
 }
@@ -333,10 +333,24 @@ boolean allDotsEaten() {
 }
 void drawWinScreen() {
   background(0); // Black background
+  // Save current transformation state
+  pushMatrix();
+  
+  // Apply a rotation and scaling transformation
+  translate(width / 2, height / 3); // Move to the text's position
+  float rotationAngle = frameCount * 0.05; // Rotate based on frame count
+  float scaleFactor = 1 + 0.5 * sin(frameCount * 0.1); // Scale up and down
+  rotate(rotationAngle);  // Apply rotation
+  scale(scaleFactor);     // Apply scaling
+  
+  // Draw the text after transformation
+  fill(255, 255, 0); // Yellow text
   textSize(48);
   textAlign(CENTER, CENTER);
-  fill(255, 255, 0); // Yellow text
-  text("YOU WIN!", width / 2, height / 3);
+  text("YOU WIN!", 0, 0); // Position (0, 0) because we already translated to (width / 2, height / 3)
+  
+  // Restore the previous transformation state
+  popMatrix();
   
   // Draw the Next Level button
   fill(0, 0, 255); // Blue button
@@ -344,4 +358,62 @@ void drawWinScreen() {
   fill(255); // White text
   textSize(20);
   text("Next Level", width / 2, height / 2 + 30);
+}
+int level = 1; // Track the current level
+int totalScore = 0; // Track the total score across levels
+
+// Function to transition to the next level
+void nextLevel() {
+  // Add the current level's score to the total score
+  totalScore += score;
+
+  // Increase the speed of the ghosts to make the game harder
+  ghostMoveSpeed *= 0.9; // Speed up ghosts by 10%
+
+  // Reset Pac-Man's position (or you can add a transition animation)
+  pacmanX = 1;
+  pacmanY = 1;
+
+  // Reset the grid, removing any eaten dots (you could also add new dots if desired)
+   grid   = new int [][] {
+  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+  {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+  {1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1},
+  {1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1},
+  {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+  {1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1},
+  {1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1},
+  {1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1},
+  {0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0},
+  {0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0},
+  {0, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 0},
+  {0, 0, 0, 0, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 0, 0, 0, 0},
+  {0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0},
+  {1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1},
+  {1, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1},
+  {1, 2, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1},
+  {1, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1},
+  {1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1},
+  {1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1},
+  {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
+
+  // Increase the difficulty by making the grid more complex, or add new ghosts if desired
+  level++; // Increase the level
+
+  // Reset the current score for the new level
+  score = 0;
+
+  // Optionally show the level transition (you could create a simple message here)
+  showLevelTransition();
+}
+
+// Function to display the level transition message
+void showLevelTransition() {
+  fill(255, 215, 0); // Golden color for the level message
+  textSize(32); // Large text for level
+  textAlign(CENTER, CENTER);
+  text("Level " + level, width / 2, height / 2); // Display level number
+  delay(1000); // Delay for 1 second to display the level
 }
