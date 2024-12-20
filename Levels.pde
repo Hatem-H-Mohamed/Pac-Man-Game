@@ -12,11 +12,18 @@ void drawCurrentLevel()
 
 // Function to transition to the next level
 void nextLevel() {
+  
+  pacmanVictorySound.rewind();
+  pacmanVictorySound.play();
+  
   // Add the current level's score to the totalScore score
   totalScore += score;
 
   // Increase the speed of the ghosts to make the game harder
-  ghostMoveSpeed *= 0.9; // Speed up ghosts by 10%
+  if (ghostMoveSpeed > 1)
+  {
+    ghostMoveSpeed-=2;
+  }
 
   // Reset Pac-Man's position (or you can add a transition animation)
   pacmanX = 10;
@@ -55,6 +62,15 @@ void nextLevel() {
   
   // Optionally show the level transition (you could create a simple message here)
   showLevelTransition();
+  
+    pacmanX = 10;
+    pacmanY = 13;
+    
+    dirX = 0;
+    dirY = 0;
+    
+    ghostPositions = new int [] [] {{1, 1}, {10, 19}, {19, 1}};
+    ghostDirections = new int [] [] {{0, 0}, {0, 0}, {0, 0}};
 }
 
 // Function to display the level transition message

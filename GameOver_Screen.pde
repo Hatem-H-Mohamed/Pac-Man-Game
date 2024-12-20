@@ -24,7 +24,11 @@ void gameOverCheck()
       {
         highScore = totalScore;
         saveHighScore();
-      } 
+      }
+      
+      pacmanDieSound.rewind();
+      pacmanDieSound.play();
+      
       gameOver = true;
       gameOver();  // Trigger the game over function
       

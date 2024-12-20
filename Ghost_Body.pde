@@ -1,14 +1,16 @@
 // Ghost positions and directions
-int[][] ghostPositions = {{9, 9}, {11, 9}, {9, 11}}; // Ghost starting positions
+int[][] ghostPositions = {{1, 1}, {1, 19}, {0, 0}}; // Ghost starting positions
 int[][] ghostDirections = {{0, 0}, {0, 0}, {0, 0}}; // Current directions of ghosts
-float ghostMoveSpeed = 15;       // Speed of ghosts
+float ghostMoveSpeed = 14;       // Speed of ghosts
 float ghostMoveCounter = 0;      // Counter to control ghost movement speed
 
 void drawGhosts()
 {
+  int i = 0;
   // Draw ghosts
   for (int[] ghost : ghostPositions) {
-    image(ghostImage, ghost[0] * gridSize, ghost[1] * gridSize);
+    image(ghostImages[i], ghost[0] * gridSize, ghost[1] * gridSize);
+    i++;
   }
 }
 

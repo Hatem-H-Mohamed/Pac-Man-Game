@@ -4,6 +4,9 @@ void eatCheck()
   // Eat dots
   if (grid[pacmanY][pacmanX] == 2) {
     grid[pacmanY][pacmanX] = 0; // Remove dot
+    pacmanEatSound.rewind();
+    pacmanEatSound.play();
+   
     score++;
     totalScore++;
   }
